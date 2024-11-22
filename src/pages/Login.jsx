@@ -1,4 +1,4 @@
-// importando components do bootstrap
+// Importando components do bootstrap
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
@@ -7,6 +7,7 @@ import { Alert } from "react-bootstrap";
 
 // Importando o hook useState para monitorar a mudanca de variaveis
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
     const [email,setEmail] = useState("")
@@ -17,6 +18,59 @@ const Login = () => {
    const [alertMensagem, setAlertMensagem] = useState("");
    const [alertVariant, setAlertVariant] = useState("danger");
 
+   // Lista de Usuarios
+   const usuarios = [
+    {id: 1, nome: "João", email: "joaov@gmail.com", senha: "11"},
+    {id: 2, nome: "Gregory", email: "gregory@gmail.com", senha: "61"}
+   ]
+
+   // Criando o navigate
+
+   const navigate = useNavigate()
+
+   // Função pra guarda na memoria do navegador as informações do usuario
+   const graverLocalStorage = (usuario) => {
+    localStorage.setItem{"userName",usuario.nome}
+    localStorage.setItem{"email",usuario.email}
+    
+   }
+
+   // Função para tratar os dados do Login
+   const handleLogin = async (e) => {
+    // Previne a pagina de ser recarregada
+    e.preventDefault()
+
+    // Verifica se ha daquele usuario digitados na lista
+    const userToFind = usuarios.find(
+      (user) => user.email == email
+    )
+
+    if (email !="") {
+      if (senha !=""){
+        if(userToFind != undefined && userToFind.senha == senha){
+          graverLocalStorage(userToFind)
+          setAlertClass("mb-3 mt-2")
+          setAlertVariant("success")
+          setAlertMensagem("login efetuado com sucesso")
+          alert("login efetuado com sucesso")
+          navigate("/home")
+      }
+      else{
+        setAlertClass("mb-3 mt-2")
+        setAlertMensagem("Usuario ou senha invalidos")
+      }
+    
+  }else{
+      setAlertClass("mb-3 mt-2")
+      setAlertMensagem("O campo senha não pode estar vazio")
+    }
+  }else{
+      setAlertClass("mb-3 mt-2")
+      setAlertMensagem("O campo email não pode estar vazio")
+    }}
+  
+
+   
 
   return (
     <div>
@@ -32,6 +86,7 @@ const Login = () => {
           login
         </span>
 
+        
         {/* Caixinha de email */}
         <FloatingLabel controlId="floatingInput" label="Email" className="mb-3">
           <Form.Control type="email" placeholder="name@example.com" 

@@ -10,6 +10,10 @@ import Image from 'react-bootstrap/Image';
 //Importação de componentes
 import NavBar from '../components/NavBar';
 
+import { useState } from "react";
+
+import { useNavigate } from "react-router-dom";
+
 const CadastroProduto = () => {
 
     const cats = [
@@ -22,14 +26,53 @@ const CadastroProduto = () => {
         {"id":7, "nome": "Livros e Papelaria"}
     ]
 
+    //Variaves para o alerta
+   const [alertClass, setAlertClass] = useState("mb-3 d-none");
+   const [alertMensagem, setAlertMensagem] = useState("");
+   const [alertVariant, setAlertVariant] = useState("danger");
+
+
     const linkImagem = "https://www.malhariapradense.com.br/wp-content/uploads/2017/08/produto-sem-imagem.png"
+
+    //Variaveis para o produto
+
+    const [nome, setNome] = useState("")
+    const [descricao, setDescricao] = useState("")
+    const [categoria, setCategoria] = useState("")
+    const [preco, setPreco] = useState("")
+    const [imagem, setImagem] = useState("")
+
+    const handleSubmit = async (e) =>
+    {
+        //Previne a pagina de ser recarregada
+        e.preventDefault();
+
+        if(nome != ""){
+            if(descricao != ""){
+                if(preco != ""){
+
+            
+        }
+        else{
+            setAlertClass("mb-3 mt-2")
+            setAlertMensagem("O campo nome não pode estar vazio");
+          }
+        }else{
+            setAlertClass("mb-3 mt-2")
+            setAlertMensagem("O campo descricao não pode estar vazio");
+          }
+        }else{
+            setAlertClass("mb-3 mt-2")
+            setAlertMensagem("O campo preco não pode estar vazio");
+          }
+    }
 
   return (
     <div>
         <NavBar/>
         <Container>
                 <h1>Cadastrar Produtos</h1>
-                <form className="mt-3">
+                <form className="mt-3" onSubmit={handleSubmit}>
                     <Row>
                         <Col xs={6}>
                         {/* Caixinha de Nome */}
@@ -102,8 +145,8 @@ const CadastroProduto = () => {
                     </Row>
 
                     {/* Alerta Caso haja erro */}
-                    <Alert key="danger" variant="danger">
-                        Ha um erro
+                    <Alert variant={alertVariant} className={alertClass}>
+                        {alertMensagem}
                     </Alert>
 
                     {/* Botao para enviar o formulario de cadastro do produto */}
