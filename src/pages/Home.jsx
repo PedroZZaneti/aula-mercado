@@ -2,29 +2,34 @@ import React from 'react'
 import CardProduto from '../components/CardProduto'
 import Container from "react-bootstrap/Container";
 
+// importar o hook useState para monitorar a mudança das variaveis
+import { useState, useEffect } from "react";
+
 //Importação de componentes
 import NavBar from '../components/NavBar';
 
-const Home = () => {
-  const produtos = [
-    {id: 1,nome:"Shampoo Cr7" , preco:9.50, descricao:"Anti Calvice", categoria:"Saude e Beleza", imagemUrl:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7MwFEt7i9mNJIdu_QFhmE45lbah4fTWFi1Q&s"},
-    {id: 2,nome:"Shampoo Cr7" , preco:9.50, descricao:"Anti Calvice", categoria:"Saude e Beleza", imagemUrl:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7MwFEt7i9mNJIdu_QFhmE45lbah4fTWFi1Q&s"},
-    {id: 3,nome:"Shampoo Cr7" , preco:9.50, descricao:"Anti Calvice", categoria:"Saude e Beleza", imagemUrl:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7MwFEt7i9mNJIdu_QFhmE45lbah4fTWFi1Q&s"},
-    {id: 3,nome:"Shampoo Cr7" , preco:9.50, descricao:"Anti Calvice", categoria:"Saude e Beleza", imagemUrl:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7MwFEt7i9mNJIdu_QFhmE45lbah4fTWFi1Q&s"},
-    {id: 3,nome:"Shampoo Cr7" , preco:9.50, descricao:"Anti Calvice", categoria:"Saude e Beleza", imagemUrl:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7MwFEt7i9mNJIdu_QFhmE45lbah4fTWFi1Q&s"},
-    {id: 3,nome:"Shampoo Cr7" , preco:9.50, descricao:"Anti Calvice", categoria:"Saude e Beleza", imagemUrl:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7MwFEt7i9mNJIdu_QFhmE45lbah4fTWFi1Q&s"},
-    {id: 3,nome:"Shampoo Cr7" , preco:9.50, descricao:"Anti Calvice", categoria:"Saude e Beleza", imagemUrl:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7MwFEt7i9mNJIdu_QFhmE45lbah4fTWFi1Q&s"},
-    {id: 3,nome:"Shampoo Cr7" , preco:9.50, descricao:"Anti Calvice", categoria:"Saude e Beleza", imagemUrl:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7MwFEt7i9mNJIdu_QFhmE45lbah4fTWFi1Q&s"},
-    {id: 3,nome:"Shampoo Cr7" , preco:9.50, descricao:"Anti Calvice", categoria:"Saude e Beleza", imagemUrl:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7MwFEt7i9mNJIdu_QFhmE45lbah4fTWFi1Q&s"},
-    {id: 3,nome:"Shampoo Cr7" , preco:9.50, descricao:"Anti Calvice", categoria:"Saude e Beleza", imagemUrl:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7MwFEt7i9mNJIdu_QFhmE45lbah4fTWFi1Q&s"},
-    {id: 3,nome:"Shampoo Cr7" , preco:9.50, descricao:"Anti Calvice", categoria:"Saude e Beleza", imagemUrl:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7MwFEt7i9mNJIdu_QFhmE45lbah4fTWFi1Q&s"},
-    {id: 3,nome:"Shampoo Cr7" , preco:9.50, descricao:"Anti Calvice", categoria:"Saude e Beleza", imagemUrl:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7MwFEt7i9mNJIdu_QFhmE45lbah4fTWFi1Q&s"},
-    {id: 3,nome:"Shampoo Cr7" , preco:9.50, descricao:"Anti Calvice", categoria:"Saude e Beleza", imagemUrl:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7MwFEt7i9mNJIdu_QFhmE45lbah4fTWFi1Q&s"},
-    {id: 3,nome:"Shampoo Cr7" , preco:9.50, descricao:"Anti Calvice", categoria:"Saude e Beleza", imagemUrl:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7MwFEt7i9mNJIdu_QFhmE45lbah4fTWFi1Q&s"},
-    {id: 3,nome:"Shampoo Cr7" , preco:9.50, descricao:"Anti Calvice", categoria:"Saude e Beleza", imagemUrl:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7MwFEt7i9mNJIdu_QFhmE45lbah4fTWFi1Q&s"},
-    {id: 3,nome:"Shampoo Cr7" , preco:9.50, descricao:"Anti Calvice", categoria:"Saude e Beleza", imagemUrl:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7MwFEt7i9mNJIdu_QFhmE45lbah4fTWFi1Q&s"},
-  ]
+const url = "http://localhost:5000/produtos"
 
+
+const Home = () => {
+  const [produtos, setProduto] = useState([])
+  
+  // useEffect pra puxar os dados da API
+  useEffect(() =>{
+    async function fetchData(){
+      try{
+        const req = await fetch(url)
+        const prods = await req.json()
+        console.log(prods)
+        setProduto(prods)
+      }
+      catch(erro){
+        console.log(erro.message)
+      }
+    }
+    fetchData()
+  }, [])
+  
   return (
     <div>
       <NavBar/>

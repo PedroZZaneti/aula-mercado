@@ -1,163 +1,184 @@
+// importando compontentes do bootstrap
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import Alert from 'react-bootstrap/Alert';
-import Image from 'react-bootstrap/Image';
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
+import Alert from "react-bootstrap/Alert";
+import Image from "react-bootstrap/Image";
 
-//Importação de componentes
-import NavBar from '../components/NavBar';
+// importação de compontentes
+import NavBarra from "../components/NavBarra";
+import { useState, useEffect } from "react";
 
-import { useState } from "react";
 
+// importação do Navigate
 import { useNavigate } from "react-router-dom";
 
+const url = "http://localhost:5000/cats"
 const CadastroProduto = () => {
 
-    const cats = [
-        {"id":1, "nome": "Eletronico"},
-        {"id":2, "nome": "Moda e Vestuario"},
-        {"id":3, "nome": "Alimentos"},
-        {"id":4, "nome": "Saude e Beleza"},
-        {"id":5, "nome": "Esportes e Lazer"},
-        {"id":6, "nome": "Brinquedos e Jogos"},
-        {"id":7, "nome": "Livros e Papelaria"}
-    ]
+  // lista de categorias
+  const cats = [];
 
-    //Variaves para o alerta
-   const [alertClass, setAlertClass] = useState("mb-3 d-none");
-   const [alertMensagem, setAlertMensagem] = useState("");
-   const [alertVariant, setAlertVariant] = useState("danger");
-
-
-    const linkImagem = "https://www.malhariapradense.com.br/wp-content/uploads/2017/08/produto-sem-imagem.png"
-
-    //Variaveis para o produto
-
-    const [nome, setNome] = useState("")
-    const [descricao, setDescricao] = useState("")
-    const [categoria, setCategoria] = useState("")
-    const [preco, setPreco] = useState("")
-    const [imagem, setImagem] = useState("")
-
-    const handleSubmit = async (e) =>
-    {
-        //Previne a pagina de ser recarregada
-        e.preventDefault();
-
-        if(nome != ""){
-            if(descricao != ""){
-                if(preco != ""){
-
-            
-        }
-        else{
-            setAlertClass("mb-3 mt-2")
-            setAlertMensagem("O campo nome não pode estar vazio");
-          }
-        }else{
-            setAlertClass("mb-3 mt-2")
-            setAlertMensagem("O campo descricao não pode estar vazio");
-          }
-        }else{
-            setAlertClass("mb-3 mt-2")
-            setAlertMensagem("O campo preco não pode estar vazio");
-          }
+  useEffect(() =>{
+    async function fetchData(){
+      try{
+        const req = await fetch(url)
+        const categoria = await req.json()
+        console.log(categoria)
+        setProduto(categoria)
+      }
+      catch(erro){
+        console.log(erro.message)
+      }
     }
+    fetchData()
+  }, [])
+
+  //   link produto sem imagem
+  const linkImagem =
+    "https://www.malhariapradense.com.br/wp-content/uploads/2017/08/produto-sem-imagem.png";
+
+  const [nome, setNome] = useState("");
+  const [descricao, setDescricao] = useState("");
+  const [categoria, setCategoria] = useState("");
+  const [preco, setPreco] = useState("");
+  const [imagem, setImagem] = useState("");
+
+  // Variaveis para alerta
+  const [alertClass, setAlertClass] = useState("mb-3 d-none");
+  const [alertMensagem, setAlertMensagem] = useState("");
+  const [alertVariant, setAlertVariant] = useState("danger");
+
+  // Criando o navigate
+  const navigate = useNavigate();
+
+  //  Função pra lidar com recarregamento da pagina
+  const handleSubmit = async (e) => {
+    // previne a pagina de se recarregada
+    e.preventDefault();
+    if (nome != "") {
+      if (descricao != "") {
+        if (preco != "") {
+          const produto = { nome, descricao, categoria, preco, imagem };
+          console.log(produto);
+          setAlertClass("mb-3 mt-2");
+          setAlertVariant("success");
+          setAlertMensagem("Produto cadastrado com sucesso");
+          alert("login efetuado com sucesso");
+          navigate("/home");
+        } else {
+          setAlertClass("mb-3 mt-2");
+          setAlertMensagem("O campo preço não pode ser vazio");
+        }
+      } else {
+        setAlertClass("mb-3 mt-2");
+        setAlertMensagem("O campo descrição não pode ser vazio");
+      }
+    } else {
+      setAlertClass("mb-3 mt-2");
+      setAlertMensagem("O campo nome não pode ser vazio");
+    }
+  };
 
   return (
     <div>
-        <NavBar/>
-        <Container>
-                <h1>Cadastrar Produtos</h1>
-                <form className="mt-3" onSubmit={handleSubmit}>
-                    <Row>
-                        <Col xs={6}>
-                        {/* Caixinha de Nome */}
-                        <FloatingLabel 
-                        controlId="floatingInputNome" 
-                        label="Name" className="mb-3">
+      <NavBarra />
+      <Container>
+        <h1>Cadastrar Produtos</h1>
+        <form className="mt-3" onSubmit={handleSubmit}>
+          <Row>
+            <Col xs={6}>
+              {/* Caixinha de Nome */}
+              <FloatingLabel
+                controlId="floatingInputNome"
+                label="Nome"
+                className="mb-3"
+              >
+                <Form.Control
+                  type="text"
+                  placeholder="Digite o nome do Produto"
+                  value={nome}
+                  onChange={(e) => setNome(e.target.value)}
+                />
+              </FloatingLabel>
 
-                        <Form.Control 
-                        type="text" 
-                        placeholder="Digite o nome aqui" 
-                        />
-                        </FloatingLabel>
-                         {/* Caixinha de descrição */}
-                         <FloatingLabel 
-                        controlId="floatingInputDescricao" 
-                        label="Descricao" 
-                        className="mb-3">
+              {/* Caixinha de Descrição */}
+              <FloatingLabel
+                controlId="floatingInputDescrição"
+                label="Descrição"
+                className="mb-3"
+              >
+                <Form.Control
+                  type="text"
+                  placeholder="Digite a descrição do Produto"
+                  value={descricao}
+                  onChange={(e) => setDescricao(e.target.value)}
+                />
+              </FloatingLabel>
+              {/* select de categoria */}
+              <Form.Group controlId="formGridTipo" className="mb-3">
+                <Form.Label>Tipo de produto</Form.Label>
+                <Form.Select>
+                  {cats.map((cat) => (
+                    <option key={cat.id} value={cat.nome}>
+                      {cat.nome}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
 
-                        <Form.Control 
-                        type="text" 
-                        placeholder="Digite a descrição do Produto" 
-                        />
-                        </FloatingLabel>
+              {/* Caixinha de Preço */}
+              <FloatingLabel
+                controlId="floatingInputPreco"
+                label="Preço"
+                className="mb-3"
+              >
+                <Form.Control
+                  type="number"
+                  step="0.1"
+                  placeholder="Digite a preço do Produto"
+                  value={preco}
+                  onChange={(e) => setPreco(e.target.value)}
+                />
+              </FloatingLabel>
+            </Col>
+            <Col xs={6}>
+              <Form.Group controlId="formFileLg" className="mb-3">
+                {/* Caixinha da Imagem */}
+                <FloatingLabel
+                  controlId="floatingInputImage"
+                  label="Envie o link da imagem do produto"
+                  className="mb-3"
+                >
+                  <Form.Control
+                    type="text"
+                    placeholder="Envie o link da imagem do produto"
+                    value={imagem}
+                  onChange={(e) => setImagem(e.target.value)}
+                  />
+                </FloatingLabel>
+                <Image src={imagem == "" ? linkImagem: imagem} rounded width={300} height={300} />
+              </Form.Group>
+            </Col>
+          </Row>
 
-                        {/* Select de categorias */}
-                        <Form.Group controlId="formGridState" className="mb-3" >
-                            <Form.Label>Tipo de produto</Form.Label>
-                            <Form.Select>
-                                
-                                {cats.map((cat)=> (
-                                  <option   key={cat.id} value={cat.nome}>
-                                    {cat.nome}
-                                  </option>  
-                                ))}
-                                
-                            </Form.Select>
-                        </Form.Group>
-                        {/* Caixinha de preco */}
-                        <FloatingLabel 
-                            controlId="floatingInputPreco" 
-                            label="Preço" 
-                            className="mb-3"
-                            >
-                        <Form.Control 
-                        type="number"
-                        step={0.2}
-                        placeholder="Digite o Preço do Produto" 
-                        />
-                        </FloatingLabel>
-                        
-                        </Col>
+          {/* Alerta caso haja erro */}
+          <Alert variant={alertVariant} className={alertClass}>
+            {alertMensagem}
+          </Alert>
 
-                        <Col xs={6}>
-                        <Form.Group controlId="formFileLg" className="mb-3">
-                        {/* Caixinha de Imagem */}
-                        <FloatingLabel 
-                        controlId="floatingInputImagem"
-                        label="Envie o Link da Imagem" 
-                        className="mb-3">
+          {/* Botão para enviar o formulario de cadastro de produto */}
 
-                        <Form.Control 
-                        type="text" 
-                        placeholder="Envie o link da imagem do produto" 
-                        />
-                        </FloatingLabel>
-
-                            <Image src={linkImagem} rounded width={300} height={300}/> 
-                        </Form.Group>      
-                        </Col>
-                    </Row>
-
-                    {/* Alerta Caso haja erro */}
-                    <Alert variant={alertVariant} className={alertClass}>
-                        {alertMensagem}
-                    </Alert>
-
-                    {/* Botao para enviar o formulario de cadastro do produto */}
-                     <Button variant="success" size="lg" type="submit">
-                        Cadastrar
-                     </Button>
-                </form>
-        </Container>
-
+          <Button variant="primary" size="lg" type="submit">
+            Cadastrar
+          </Button>
+        </form>
+      </Container>
     </div>
-  )
-}
+  );
+};
 
-export default CadastroProduto
+export default CadastroProduto;
