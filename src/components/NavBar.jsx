@@ -19,11 +19,12 @@ const NavBar = () => {
           {/* Paginas */}
           <Nav className="me-auto">
             <Nav.Link href="/home" className='active'>Produtos</Nav.Link>
-            <Nav.Link href="/cadastro">Cadastro</Nav.Link>
+            <Nav.Link href="/produto/cadastrar">Cadastro</Nav.Link>
           </Nav>
           {/* Sair */}
           <Nav className="justify-content-end">
-            <Nav.Link href="/login">Sair</Nav.Link>
+            <Nav.Link href="/login" onClick={localStorage.removeItem("userName")}
+            >Sair</Nav.Link>
           </Nav>
           
           </Navbar.Collapse>

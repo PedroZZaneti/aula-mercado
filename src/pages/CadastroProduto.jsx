@@ -9,33 +9,32 @@ import Alert from "react-bootstrap/Alert";
 import Image from "react-bootstrap/Image";
 
 // importação de compontentes
-import NavBarra from "../components/NavBarra";
+import NavBar from "../components/NavBar";
 import { useState, useEffect } from "react";
-
 
 // importação do Navigate
 import { useNavigate } from "react-router-dom";
 
-const url = "http://localhost:5000/cats"
+const url = "http://localhost:5000/cats";
+const urlProd = "http://localhost:5000/produtos";
+
 const CadastroProduto = () => {
-
   // lista de categorias
-  const cats = [];
+  const [cats, setCategorias] = useState([]);
 
-  useEffect(() =>{
-    async function fetchData(){
-      try{
-        const req = await fetch(url)
-        const categoria = await req.json()
-        console.log(categoria)
-        setProduto(categoria)
-      }
-      catch(erro){
-        console.log(erro.message)
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const req = await fetch(url);
+        const categoria = await req.json();
+        console.log(categoria);
+        setCategorias(categoria);
+      } catch (erro) {
+        console.log(erro.message);
       }
     }
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
   //   link produto sem imagem
   const linkImagem =
@@ -43,9 +42,9 @@ const CadastroProduto = () => {
 
   const [nome, setNome] = useState("");
   const [descricao, setDescricao] = useState("");
-  const [categoria, setCategoria] = useState("");
+  const [categoria, setCategoria] = useState("Elêtronicos");
   const [preco, setPreco] = useState("");
-  const [imagem, setImagem] = useState("");
+  const [imagemUrl, setImagemUrl] = useState("");
 
   // Variaveis para alerta
   const [alertClass, setAlertClass] = useState("mb-3 d-none");
@@ -59,16 +58,27 @@ const CadastroProduto = () => {
   const handleSubmit = async (e) => {
     // previne a pagina de se recarregada
     e.preventDefault();
-    if (nome != "") {
-      if (descricao != "") {
-        if (preco != "") {
-          const produto = { nome, descricao, categoria, preco, imagem };
+    if (nome !== "") {
+      if (descricao !== "") {
+        if (preco !== "") {
+          const produto = { nome, descricao, categoria, preco, imagemUrl };
           console.log(produto);
-          setAlertClass("mb-3 mt-2");
-          setAlertVariant("success");
-          setAlertMensagem("Produto cadastrado com sucesso");
-          alert("login efetuado com sucesso");
-          navigate("/home");
+          try {
+            const req = await fetch(urlProd, {
+              method: "POST",
+              headers: { "Content-type": "application/json" },
+              body: JSON.stringify(produto),
+            });
+            const res = req.json();
+            console.log(res);
+            setAlertClass("mb-3 mt-2");
+            setAlertVariant("success");
+            setAlertMensagem("Produto cadastrado com sucesso");
+            alert("Produto efetuado com sucesso");
+            //navigate("/home");
+          } catch (error) {
+            console.log(error);
+          }
         } else {
           setAlertClass("mb-3 mt-2");
           setAlertMensagem("O campo preço não pode ser vazio");
@@ -85,7 +95,7 @@ const CadastroProduto = () => {
 
   return (
     <div>
-      <NavBarra />
+      <NavBar />
       <Container>
         <h1>Cadastrar Produtos</h1>
         <form className="mt-3" onSubmit={handleSubmit}>
@@ -121,10 +131,15 @@ const CadastroProduto = () => {
               {/* select de categoria */}
               <Form.Group controlId="formGridTipo" className="mb-3">
                 <Form.Label>Tipo de produto</Form.Label>
-                <Form.Select>
-                  {cats.map((cat) => (
-                    <option key={cat.id} value={cat.nome}>
-                      {cat.nome}
+                <Form.Select
+                  value={categoria}
+                  onChange={(e) => {
+                    setCategoria(e.target.value);
+                  }}
+                >
+                  {cats.map((cats) => (
+                    <option key={cats.id} value={cats.nome}>
+                      {cats.nome}
                     </option>
                   ))}
                 </Form.Select>
@@ -156,11 +171,16 @@ const CadastroProduto = () => {
                   <Form.Control
                     type="text"
                     placeholder="Envie o link da imagem do produto"
-                    value={imagem}
-                  onChange={(e) => setImagem(e.target.value)}
+                    value={imagemUrl}
+                    onChange={(e) => setImagemUrl(e.target.value)}
                   />
                 </FloatingLabel>
-                <Image src={imagem == "" ? linkImagem: imagem} rounded width={300} height={300} />
+                <Image
+                  src={imagemUrl === "" ? linkImagem : imagemUrl}
+                  rounded
+                  width={300}
+                  height={300}
+                />
               </Form.Group>
             </Col>
           </Row>

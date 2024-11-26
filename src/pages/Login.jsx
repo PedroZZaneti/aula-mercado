@@ -14,6 +14,12 @@ import {useNavigate} from "react-router-dom"
 const url = "http://localhost:5000/usuarios"
 
 const Login = () => {
+  // Resetar Local Storage
+  localStorage.removeItem("userName")
+  localStorage.removeItem("email")
+
+
+
   //Variaveis pra guardar as informações digitadas pelo usúario
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
@@ -62,9 +68,9 @@ const Login = () => {
       (user) => user.email == email
   )
 
-    if(email != ""){
-      if (senha != ""){
-        if(userToFind != undefined && userToFind.senha == senha){
+    if(email !== ""){
+      if (senha !== ""){
+        if(userToFind !== undefined && userToFind.senha === senha){
           graverLocalStorage(userToFind)
           setAlertClass("mb-3 mt-2")
           setAlertVariant("success")
