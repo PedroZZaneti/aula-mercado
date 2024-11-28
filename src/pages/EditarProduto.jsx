@@ -54,7 +54,11 @@ const EditarProduto = () => {
   const navigate = useNavigate();
 
   const params = window.location.pathname.split("/");
-  const idProd = params[params.lenght - 1];
+  console.log(params);
+  const idProd = params[params.length - 1];
+
+
+  console.log(idProd);
 
   // Buscar as informacoes do produto
   useEffect(() => {
@@ -74,7 +78,7 @@ const EditarProduto = () => {
         }
     }  
     fetchData()
-  })
+  }, []);
 
     //  Função pra lidar com o envio dos dados
     const handleSubmit = async (e) => {
@@ -96,9 +100,9 @@ const EditarProduto = () => {
                 console.log(res);
                 setAlertClass("mb-3 mt-2");
                 setAlertVariant("success");
-                setAlertMensagem("Produto cadastrado com sucesso");
-                alert("Produto efetuado com sucesso");
-                //navigate("/home");
+                setAlertMensagem("Produto editado com sucesso");
+                alert("Produto editado com sucesso");
+                navigate("/home");
               } catch (error) {
                 console.log(error);
               }
